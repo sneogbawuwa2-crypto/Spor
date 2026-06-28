@@ -7,48 +7,37 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         * {
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
             margin: 0;
             padding: 0;
-            background: #08080f;
             font-family: 'Inter', system-ui, sans-serif;
-            overflow-x: hidden;
+        }
+        body {
+            background: #08080f;
             color: #e2e2e8;
             padding-bottom: 60px;
+            -webkit-tap-highlight-color: transparent;
         }
-        input::placeholder {
-            color: #444;
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
         }
         input:focus {
             outline: none;
-            border-color: #555 !important;
         }
     </style>
 </head>
 <body>
 
-    <div id="toast" style="display: none; position: fixed; top: 16px; left: 50%; transform: translateX(-50%); color: #000; padding: 10px 20px; border-radius: 30px; font-size: 13px; font-weight: 700; z-index: 999; box-shadow: 0 4px 20px rgba(0,0,0,0.4);">
-        ✓ Kaydedildi
-    </div>
-
-    <div style="background: #0c0c16; border-bottom: 1px solid #1a1a28; padding: 20px 16px;">
-        <div style="max-width: 560px; margin: 0 auto;">
-            <div id="tabs-container" style="display: flex; gap: 6px;"></div>
-        </div>
-    </div>
-
-    <div style="max-width: 560px; margin: 0 auto; padding: 16px 16px 0;">
-        <div id="day-header-container"></div>
-        <div id="exercises-container"></div>
-        <div id="actions-container"></div>
-    </div>
+    <div id="app"></div>
 
     <script>
         const ytLink = (q) => `https://www.youtube.com/results?search_query=${encodeURIComponent(q + " nasıl yapılır spor")}`;
@@ -101,7 +90,7 @@
               { name: "Flat Chest Press Machine", sets: "4", reps: "8-10", target: "Orta Göğüs", machine: "Düz Göğüs Pres Makinesi", tip: "Makinede göğüs liflerini çok daha ağır yükleyebilirsin.", yt: ytLink("düz göğüs pres makinesi flat chest press") },
               { name: "Incline Smith Machine Press", sets: "3", reps: "10-12", target: "Üst Göğüs", machine: "Smith Machine", tip: "Sehpa açısını 30 dereceye ayarla, barı üst göğse yavaşça indir.", yt: ytLink("incline smith machine bench press üst göğüs") },
               { name: "High-to-Low Cable Fly", sets: "3", reps: "12-15", target: "Alt Göğüs Lifleri", machine: "Üst Makara Kablo İstasyonu", tip: "Kabloları aşağıda ve önde birleştirirken göğsün altını sık.", yt: ytLink("high to low cable fly alt göğüs") },
-              { name: "Pec Deck Fly", sets: "3", reps: "10-12", target: "Göğsün Genel Genişliği", machine: "Göğüs Kelebek Makinesi", tip: "Kolları arkaya açtığında göğüs kasının tamamen esnediğinden emin ol.", yt: ytLink("pec deck fly kelebek makinesi göğüs") },
+              { name: "Pec Deck Fly", sets: "3", reps: "10-12", target: "Göğsün Genel Genişliği", machine: "Göğüs Kelebek Makinesi", tip: "Kolları arkaya açtığında göğsün kasının tamamen esnediğinden emin ol.", yt: ytLink("pec deck fly kelebek makinesi göğüs") },
               { name: "Machine Shoulder Press", sets: "2", reps: "10-12", target: "Ön Omuz", machine: "Omuz Pres (Dar veya Paralel Tutuş)", tip: "İtme esnasında omuzlarının yukarı doğru kulaklarına yaklaşmasına izin verme.", yt: ytLink("omuz pres makinesi shoulder press") },
               { name: "Cable Lateral Raise", sets: "4", reps: "12-15", target: "Yan Omuz", machine: "Kablo İstasyonu (Önden Çekiş)", tip: "Bu sefer kabloyu önden alarak lifleri farklı açıdan uyar.", yt: ytLink("kablo lateral raise yan omuz") },
               { name: "Rope Pushdown", sets: "3", reps: "12", target: "Triceps", machine: "Üst Makara Halat", tip: "Set aralarını kısa tutarak arka kollara maksimum kanı pompala.", yt: ytLink("rope pushdown triceps halat") },
@@ -118,7 +107,7 @@
               { name: "One Arm Machine Row", sets: "3", reps: "10-12", target: "Sırt Simetrisi / Lat", machine: "Tek Kol Plaka Yüklemeli Row Makinesi", tip: "Vücudunu döndürmeden, sadece sırt kasının gücüyle çekişi tamamla.", yt: ytLink("tek kol makine row sırt") },
               { name: "Face Pull", sets: "3", reps: "15", target: "Arka Omuz / Üst Sırt", machine: "Üst Makara Halat", tip: "Omuz kuşağının arkasını doldurmak için kontrollü ve yüksek tekrarlı odaklan.", yt: ytLink("face pull arka omuz halat") },
               { name: "Machine Rear Delt Fly", sets: "3", reps: "15", target: "Arka Omuz", machine: "Ters Kelebek Makinesi", tip: "Ağırlığı arkaya açarken kürek kemiklerini birbirine çok fazla çarpma.", yt: ytLink("ters kelebek makinesi arka omuz") },
-              { name: "Machine Preacher Curl", sets: "3", reps: "10-12", target: "Biceps (Kısa Baş)", machine: "Scott / Preacher Curl Makinesi", tip: "Makinede tepe noktada gerilimi kaçırmazsın.", yt: ytLink("preacher curl scott makinesi biceps") },
+              { name: "Machine Preacher Curl", sets: "3", reps: "10-12", target: "Biceps (Kısa Baş)", machine: "Scott / Preacher Curl Makinesi", tip: "Makinede tepe noktasındaki gerilimi kaçırmazsın.", yt: ytLink("preacher curl scott makinesi biceps") },
               { name: "Cable Hammer Curl", sets: "3", reps: "10-12", target: "Brachialis / Ön Kol", machine: "Alçak Makara Halat", tip: "Ön kollar tamamen yanana kadar tempo kontrollü devam et.", yt: ytLink("cable hammer curl ön kol") },
             ]
           },
@@ -126,158 +115,127 @@
 
         // Durum Yönetimi (State)
         let activeDay = 0;
-        let weights = JSON.parse(localStorage.getItem("gym_weights")) || {};
-        let completed = JSON.parse(localStorage.getItem("gym_completed")) || {};
+        let weights = JSON.parse(localStorage.getItem('gym_weights')) || {};
+        let completed = JSON.parse(localStorage.getItem('gym_completed')) || {};
         let expandedEx = null;
+        let savedToast = false;
 
-        function saveToLocalStorage() {
-            localStorage.setItem("gym_weights", JSON.stringify(weights));
-            localStorage.setItem("gym_completed", JSON.stringify(completed));
-        }
-
-        function setActiveDay(index) {
-            activeDay = index;
+        window.setActiveDay = (idx) => {
+            activeDay = idx;
             expandedEx = null;
             render();
-        }
+        };
 
-        function toggleComplete(exIdx) {
+        window.toggleComplete = (exIdx) => {
             const key = `${DAYS[activeDay].id}-${exIdx}`;
             completed[key] = !completed[key];
-            saveToLocalStorage();
+            localStorage.setItem('gym_completed', JSON.stringify(completed));
             render();
-        }
+        };
 
-        function toggleExpand(exIdx) {
+        window.toggleExpand = (exIdx) => {
             expandedEx = expandedEx === exIdx ? null : exIdx;
             render();
-        }
+        };
 
-        function updateWeight(exIdx, val) {
-            const key = `${DAYS[activeDay].id}-${exIdx}`;
-            weights[key] = val;
-            localStorage.setItem("gym_weights", JSON.stringify(weights));
-        }
-
-        function handleSave() {
-            saveToLocalStorage();
+        window.setWeight = (exIdx, value, el) => {
             const day = DAYS[activeDay];
-            const toast = document.getElementById('toast');
-            toast.style.background = day.color;
-            toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 2000);
-        }
-
-        function resetAllData() {
-            if (confirm("Tüm haftalık ilerlemenizi ve girdiğiniz kiloları sıfırlamak istediğinize emin misiniz?")) {
-                weights = {};
-                completed = {};
-                saveToLocalStorage();
-                render();
+            const key = `${day.id}-${exIdx}`;
+            weights[key] = value;
+            localStorage.setItem('gym_weights', JSON.stringify(weights));
+            
+            // Gerçek zamanlı border ve yazı rengi değişimi (Klavye odağını kaybetmemek için)
+            if (value) {
+                el.style.borderColor = day.color + "60";
+                el.style.color = day.color;
+            } else {
+                el.style.borderColor = "#2a2a3a";
+                el.style.color = "#555";
             }
-        }
+        };
 
-        // Arayüz Çizim Fonksiyonu (Render)
+        window.handleSave = () => {
+            savedToast = true;
+            render();
+            setTimeout(() => {
+                savedToast = false;
+                render();
+            }, 2000);
+        };
+
+        // Arayüzü Çizen Ana Fonksiyon
         function render() {
             const day = DAYS[activeDay];
+            const completedCount = day.exercises.filter((_, i) => completed[`${day.id}-${i}`]).length;
+            const progress = Math.round((completedCount / day.exercises.length) * 100) || 0;
 
-            // 1. Üst Sekmeleri Çiz
-            let tabsHtml = '';
+            let html = '';
+
+            // 1. Bildirim (Toast)
+            if (savedToast) {
+                html += '<div style="position: fixed; top: 16px; left: 50%; transform: translateX(-50%); background: ' + day.color + '; color: #000; padding: 10px 20px; border-radius: 30px; font-size: 13px; font-weight: 700; z-index: 999; box-shadow: 0 4px 20px rgba(0,0,0,0.4);">✓ Kaydedildi</div>';
+            }
+
+            // 2. Üst Menü (Header & Tabs)
+            html += '<div style="background: #0c0c16; border-bottom: 1px solid #1a1a28; padding: 20px 16px 0">';
+            html += '  <div style="max-width: 560px; margin: 0 auto">';
+            html += '    <div style="font-size: 10px; letter-spacing: 3px; color: #444; text-transform: uppercase; margin-bottom: 4px;">Antrenman Takip</div>';
+            html += '    <div style="font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.5px; margin-bottom: 16px;">5 Günlük Program</div>';
+            html += '    <div style="display: flex; gap: 4px;">';
+            
             DAYS.forEach((d, i) => {
-                const dayCompleted = d.exercises.filter((_, j) => completed[`${d.id}-${j}`]).length;
-                const dayProgress = Math.round((dayCompleted / d.exercises.length) * 100);
-                const isActive = activeDay === i;
-                
-                const boxShadowStyle = isActive ? '0 0 10px ' + d.color + '20' : 'none';
-                const bgStyle = isActive ? '#121225' : '#0f0f1c';
-                const borderStyle = '1px solid ' + (isActive ? d.color : '#1a1a28');
-                const labelColor = isActive ? d.color : '#a0a0ab';
-                const countColor = isActive ? '#ffffff' : '#71717a';
-
-                tabsHtml += `
-                    <div onclick="setActiveDay(${i})" style="
-                        flex: 1; cursor: pointer;
-                        background: ${bgStyle};
-                        border: ${borderStyle};
-                        border-radius: 10px; padding: 12px 6px; text-align: center;
-                        transition: all 0.2s;
-                        box-shadow: ${boxShadowStyle};
-                    ">
-                        <div style="font-size: 10px; color: ${labelColor}; font-weight: 700; margin-bottom: 6px;">
-                            ${d.label}
-                        </div>
-                        <div style="height: 3px; background: #1a1a28; border-radius: 2px; margin: 0 2px;">
-                            <div style="height: 100%; border-radius: 2px; background: ${d.color}; width: ${dayProgress}%; transition: width 0.2s;"></div>
-                        </div>
-                        <div style="font-size: 9px; color: ${countColor}; font-weight: 600; margin-top: 6px;">
-                            ${dayCompleted}/${d.exercises.length}
-                        </div>
-                    </div>
-                `;
+                const isAct = activeDay === i;
+                html += '      <button onClick="setActiveDay(' + i + ')" style="flex: 1; background: none; border: none; cursor: pointer; padding: 8px 4px 10px; border-bottom: ' + (isAct ? '2px solid ' + d.color : '2px solid transparent') + '; color: ' + (isAct ? '#fff' : '#444') + '; font-size: 11px; font-weight: 700; letter-spacing: 1px; transition: all 0.15s;">' + d.label + '</button>';
             });
-            document.getElementById('tabs-container').innerHTML = tabsHtml;
+            
+            html += '    </div>';
+            html += '  </div>';
+            html += '</div>';
 
-            // 2. Gün Başlığını Çiz
-            document.getElementById('day-header-container').innerHTML = `
-                <div style="
-                    background: #0f0f1c;
-                    border: 1px solid #1a1a28;
-                    border-left: 4px solid ${day.color};
-                    border-radius: 12px; padding: 14px 16px; margin-bottom: 16px;
-                ">
-                    <div style="font-size: 10px; color: ${day.color}; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 3px;">
-                        ${day.full}
-                    </div>
-                    <div style="font-size: 15px; font-weight: 800; color: #fff;">
-                        ${day.focus}
-                    </div>
-                </div>
-            `;
+            // İçerik Alanı Başlangıcı
+            html += '<div style="max-width: 560px; margin: 0 auto; padding: 16px 16px 0;">';
+            
+            // 3. Gün Bilgisi ve İlerleme Çubuğu Kartı
+            html += '  <div style="background: #0f0f1c; border: 1px solid ' + day.color + '30; border-left: 3px solid ' + day.color + '; border-radius: 12px; padding: 14px 16px; margin-bottom: 12px;">';
+            html += '    <div style="font-size: 10px; color: ' + day.color + '; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 3px;">' + day.full + '</div>';
+            html += '    <div style="font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 10px;">' + day.focus + '</div>';
+            html += '    <div style="display: flex; align-items: center; gap: 10px;">';
+            html += '      <div style="flex: 1; height: 4px; background: #1e1e2e; border-radius: 2px;">';
+            html += '        <div style="height: 100%; border-radius: 2px; background: ' + day.color + '; width: ' + progress + '%; transition: width 0.3s ease;"></div>';
+            html += '      </div>';
+            html += '      <div style="font-size: 11px; color: #666; white-space: nowrap;">' + completedCount + '/' + day.exercises.length + '</div>';
+            html += '    </div>';
+            html += '  </div>';
 
-            // 3. Egzersizleri Çiz
-            let exercisesHtml = '<div style="display: flex; flex-direction: column; gap: 10px;">';
+            // 4. Egzersiz Listesi
+            html += '  <div style="display: flex; flex-direction: column; gap: 8px;">';
             day.exercises.forEach((ex, i) => {
-                const key = `${day.id}-${i}`;
+                const key = day.id + '-' + i;
                 const isDone = completed[key] || false;
-                const w = weights[key] || "";
+                const w = weights[key] || '';
                 const isOpen = expandedEx === i;
 
-                const itemBg = isDone ? '#090912' : '#0f0f1c';
-                const itemBorder = '1px solid ' + (isDone ? day.color + '20' : '#1a1a28');
-                const itemOpacity = isDone ? '0.6' : '1';
-                const nameColor = isDone ? '#666' : '#e2e2e8';
-                const nameDecoration = isDone ? 'line-through' : 'none';
-                const badgeBg = day.color + '15';
-                const arrowTransform = isOpen ? 'rotate(180deg)' : 'none';
+                html += '    <div style="background: ' + (isDone ? '#0c0c18' : '#0f0f1c') + '; border: 1px solid ' + (isDone ? day.color + '40' : '#1a1a28') + '; border-radius: 12px; overflow: hidden; opacity: ' + (isDone ? '0.7' : '1') + '; transition: all 0.2s;">';
+                
+                // Ana Satır (Checkbox + İsim + KG)
+                html += '      <div style="padding: 13px 14px; display: flex; align-items: center; gap: 12px;">';
+                
+                // Checkbox
+                html += '        <div onClick="toggleComplete(' + i + ')" style="width: 22px; height: 22px; border-radius: 7px; border: 2px solid ' + (isDone ? day.color : '#2a2a3a') + '; background: ' + (isDone ? day.color : 'transparent') + '; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #000; font-weight: 800; transition: all 0.15s;">' + (isDone ? '✓' : '') + '</div>';
+                
+                // İsim ve Etiketler
+                html += '        <div style="flex: 1; min-width: 0; cursor: pointer;" onClick="toggleExpand(' + i + ')">';
+                html += '          <div style="font-size: 13px; font-weight: 700; color: ' + (isDone ? '#555' : '#e2e2e8') + '; text-decoration: ' + (isDone ? 'line-through' : 'none') + '; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">' + ex.name + '</div>';
+                html += '          <div style="display: flex; gap: 5px; flex-wrap: wrap;">';
+                html += '            <span style="background: ' + day.color + '20; color: ' + day.color + '; border-radius: 5px; padding: 2px 7px; font-size: 10px; font-weight: 700;">' + ex.sets + ' SET</span>';
+                html += '            <span style="background: #1e1e2e; color: #aaa; border-radius: 5px; padding: 2px 7px; font-size: 10px; font-weight: 600;">' + ex.reps + ' TK</span>';
+                html += '            <span style="background: #1e1e2e; color: #666; border-radius: 5px; padding: 2px 7px; font-size: 10px;">' + ex.target + '</span>';
+                html += '          </div>';
+                html += '        </div>';
 
-                exercisesHtml += `
-                    <div style="
-                        background: ${itemBg}; 
-                        border: ${itemBorder}; 
-                        border-radius: 12px; overflow: hidden; 
-                        opacity: ${itemOpacity}; transition: all 0.2s;
-                    ">
-                        <div style="padding: 14px; display: flex; align-items: center; gap: 12px;">
-                            
-                            <div onclick="toggleComplete(${i}); event.stopPropagation();" style="
-                                width: 24px; height: 24px; border-radius: 8px; 
-                                border: 2px solid ${isDone ? day.color : '#2a2a3a'}; 
-                                background: ${isDone ? day.color : 'transparent'}; 
-                                flex-shrink: 0; cursor: pointer; display: flex; 
-                                align-items: center; justify-content: center; 
-                                font-size: 13px; color: #000; font-weight: 800; transition: all 0.15s;
-                            ">
-                                ${isDone ? "✓" : ""}
-                            </div>
-
-                            <div onclick="toggleExpand(${i})" style="flex: 1; min-width: 0; cursor: pointer;">
-                                <div style="
-                                    font-size: 14px; font-weight: 700; 
-                                    color: ${nameColor}; 
-                                    text-decoration: ${nameDecoration}; 
-                                    margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-                                ">
-                                    ${ex.name}
-                                </div>
-                                <div style="display: flex; gap: 6px; align-items: center;">
-                                    <span style="font-size: 11px; color: ${day.co
+                // KG Giriş Alanı
+                const borderCol = w ? day.color + '60' : '#2a2a3a';
+                const textCol = w ? day.color : '#555';
+                html += '        <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; flex-shrink: 0;">';
+                html += '          <div style="font-size: 9px; color: #444; text-transform: uppercase; letter-spacing: 1px;">KG</div>';
+                html += '          <input type="number" value="' + w + '" oninput="setWeight(' + i + ', this.value, this)" placeholder="—" style="width: 52px; height: 36px; background: #16161f; border: 1px solid ' + borderCol + '; border-radius: 8px; color
