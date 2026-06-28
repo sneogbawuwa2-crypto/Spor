@@ -3,332 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hipertrofi Antrenman Takipçisi</title>
+    <title>Antrenman Takip</title>
     <style>
-        :root {
-            --bg-color: #121212;
-            --surface-color: #1e1e1e;
-            --primary-color: #bb86fc;
-            --text-color: #e0e0e0;
-            --border-color: #333;
-            --success-color: #03dac6;
-        }
-
+        /* Tamamen görünür olması için arka planı güncelledik */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: sans-serif;
             margin: 0;
             padding: 20px;
-            line-height: 1.6;
         }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+        .container { max-width: 600px; margin: 0 auto; }
+        .card { 
+            background: #2d2d2d; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            border-radius: 8px; 
         }
-
-        h1 {
-            text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 30px;
-            font-size: 1.8rem;
-        }
-
-        .day-card {
-            background-color: var(--surface-color);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-
-        .day-title {
-            color: var(--primary-color);
-            margin-top: 0;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-            font-size: 1.3rem;
-        }
-
-        .exercise-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 10px;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .exercise-row:last-child {
-            border-bottom: none;
-        }
-
-        .exercise-name {
-            font-weight: bold;
-            font-size: 0.95rem;
-        }
-
-        .exercise-sets {
-            color: #888;
-            font-size: 0.85rem;
-        }
-
-        .weight-input {
-            width: 100%;
-            background-color: #2c2c2c;
-            border: 1px solid var(--border-color);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
-
-        .weight-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        .prev-weight {
-            font-size: 0.85rem;
-            color: #aaa;
-            text-align: center;
-        }
-
-        .save-btn {
-            background-color: var(--primary-color);
-            color: #000;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .save-btn:active {
-            transform: scale(0.95);
-        }
-
-        .save-btn.saved {
-            background-color: var(--success-color);
-        }
-
-        .header-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 10px;
-            font-size: 0.8rem;
-            color: #888;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .header-row > div:first-child {
-            text-align: left;
-        }
-
-        @media (max-width: 600px) {
-            .exercise-row, .header-row {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-            .header-row {
-                display: none;
-            }
-            .exercise-name {
-                margin-bottom: 5px;
-            }
-            .exercise-row {
-                background-color: #252525;
-                padding: 15px;
-                border-radius: 8px;
-                margin-bottom: 10px;
-                border: none;
-            }
-            .prev-weight::before {
-                content: "Geçen Hafta: ";
-            }
-        }
+        .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        input { width: 60px; padding: 5px; color: black; }
+        button { padding: 5px 10px; cursor: pointer; background: #bb86fc; border: none; border-radius: 4px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🚀 Hipertrofi & Güç Takipçisi</h1>
-
-    <!-- GÜN 1: GÖĞÜS & OMUZ -->
-    <div class="day-card">
-        <h2 class="day-title">Gün 1: İtiş (Göğüs & Omuz Ağırlıklı)</h2>
-        <div class="header-row">
-            <div>Egzersiz</div>
-            <div>Geçmiş</div>
-            <div>Bugün (kg)</div>
-            <div>İşlem</div>
+    <h2>Antrenman Programı</h2>
+    
+    <!-- Örnek bir satır -->
+    <div class="card">
+        <div class="row">
+            <span>Incline DB Press</span>
+            <span id="prev-inc-db">0 kg</span>
         </div>
-
-        <div class="exercise-row">
-            <div>
-                <div class="exercise-name">Incline Dumbbell Press</div>
-                <div class="exercise-sets">4 Set x 8-10 Tekrar</div>
-            </div>
-            <div class="prev-weight" id="prev-inc-db">- kg</div>
-            <div><input type="number" id="input-inc-db" class="weight-input" placeholder="0"></div>
-            <div><button class="save-btn" onclick="saveWeight('inc-db', this)">Kaydet</button></div>
-        </div>
-
-        <div class="exercise-row">
-            <div>
-                <div class="exercise-name">Flat Barbell Bench Press</div>
-                <div class="exercise-sets">3 Set x 8-12 Tekrar</div>
-            </div>
-            <div class="prev-weight" id="prev-bench">- kg</div>
-            <div><input type="number" id="input-bench" class="weight-input" placeholder="0"></div>
-            <div><button class="save-btn" onclick="saveWeight('bench', this)">Kaydet</button></div>
-        </div>
-
-        <div class="exercise-row">
-            <div>
-                <div class="exercise-name">Overhead Press (OHP)</div>
-                <div class="exercise-sets">4 Set x 8-10 Tekrar</div>
-            </div>
-            <div class="prev-weight" id="prev-ohp">- kg</div>
-            <div><input type="number" id="input-ohp" class="weight-input" placeholder="0"></div>
-            <div><button class="save-btn" onclick="saveWeight('ohp', this)">Kaydet</button></div>
-        </div>
-
-        <div class="exercise-row">
-            <div>
-                <div class="exercise-name">Lateral Raise</div>
-                <div class="exercise-sets">4 Set x 12-15 Tekrar</div>
-            </div>
-            <div class="prev-weight" id="prev-lat-raise">- kg</div>
-            <div><input type="number" id="input-lat-raise" class="weight-input" placeholder="0"></div>
-            <div><button class="save-btn" onclick="saveWeight('lat-raise', this)">Kaydet</button></div>
+        <div class="row">
+            <input type="number" id="input-inc-db" placeholder="Kg">
+            <button onclick="kaydet('inc-db')">Kaydet</button>
         </div>
     </div>
-
-    <!-- GÜN 2: SIRT & BİCEPS -->
-    <div class="day-card">
-        <h2 class="day-title">Gün 2: Çekiş (Sırt & Biceps)</h2>
-        <div class="header-row">
-            <div>Egzersiz</div>
-            <div>Geçmiş</div>
-            <div>Bugün (kg)</div>
-            <div>İşlem</div>
-        </div>
-
-        <div class="exercise-row">
-            <div>
-                <div class="exercise-name">Lat Pulldown</div>
-                <div class="exercise-sets">4 Set x 8-12 Tekrar</div>
-            </div>
-            <div class="prev-weight" id="prev-lat-pull">- kg</div>
-            <div><input type="number" id="input-lat-pull" class="weight-input" placeholder="0"></div>
-            <div><button class="save-btn" onclick="saveWeight('lat-pull', this)">Kaydet</button></div>
-        </div>
-
-        <div class="exercise-row">
-            <div>
-                <div class="exercise-name">Barbell Row</div>
-                <div class="exercise-sets">4 Set x 8-10 Tekrar</div>
-            </div>
-            <div class="prev-weight" id="prev-row">- kg</div>
-            <div><input type="number" id="input-row" class="weight-input" placeholder="0"></div>
-            <div><button class="save-btn" onclick="saveWeight('row', this)">Kaydet</button></div>
-        </div>
-
-        <div class="exercise-row">
-            <div>
-                <div class="exercise-name">Face Pull (Arka Omuz)</div>
-                <div class="exercise-sets">4 Set x 12-15 Tekrar</div>
-            </div>
-            <div class="prev-weight" id="prev-face-pull">- kg</div>
-            <div><input type="number" id="input-face-pull" class="weight-input" placeholder="0"></div>
-            <div><button class="save-btn" onclick="saveWeight('face-pull', this)">Kaydet</button></div>
-        </div>
-    </div>
-
-    <!-- GÜN 3: OMUZ ODAKLI İTİŞ -->
-    <div class="day-card">
-        <h2 class="day-title">Gün 3: İtiş 2 (Omuz Odaklı)</h2>
-        <div class="header-row">
-            <div>Egzersiz</div>
-            <div>Geçmiş</div>
-            <div>Bugün (kg)</div>
-            <div>İşlem</div>
-        </div>
-
-        <div class="exercise-row">
-            <div>
-                <div class="exercise-name">Dumbbell Shoulder Press</div>
-                <div class="exercise-sets">4 Set x 8-10 Tekrar</div>
-            </div>
-            <div class="prev-weight" id="prev-db-shoulder">- kg</div>
-            <div><input type="number" id="input-db-shoulder" class="weight-input" placeholder="0"></div>
-            <div><button class="save-btn" onclick="saveWeight('db-shoulder', this)">Kaydet</button></div>
-        </div>
-
-        <div class="exercise-row">
-            <div>
-                <div class="exercise-name">Cable Crossover</div>
-                <div class="exercise-sets">4 Set x 10-12 Tekrar</div>
-            </div>
-            <div class="prev-weight" id="prev-cable-cross">- kg</div>
-            <div><input type="number" id="input-cable-cross" class="weight-input" placeholder="0"></div>
-            <div><button class="save-btn" onclick="saveWeight('cable-cross', this)">Kaydet</button></div>
-        </div>
-        
-        <div class="exercise-row">
-            <div>
-                <div class="exercise-name">Cable Lateral Raise</div>
-                <div class="exercise-sets">4 Set x 12-15 Tekrar</div>
-            </div>
-            <div class="prev-weight" id="prev-cable-lat">- kg</div>
-            <div><input type="number" id="input-cable-lat" class="weight-input" placeholder="0"></div>
-            <div><button class="save-btn" onclick="saveWeight('cable-lat', this)">Kaydet</button></div>
-        </div>
-    </div>
-
 </div>
 
 <script>
-    // Sayfa yüklendiğinde geçmiş verileri Local Storage'dan çek
-    document.addEventListener("DOMContentLoaded", () => {
-        const exercises = ['inc-db', 'bench', 'ohp', 'lat-raise', 'lat-pull', 'row', 'face-pull', 'db-shoulder', 'cable-cross', 'cable-lat'];
-        
-        exercises.forEach(ex => {
-            const savedWeight = localStorage.getItem(`workout_${ex}`);
-            if (savedWeight) {
-                document.getElementById(`prev-${ex}`).innerText = `${savedWeight} kg`;
-                document.getElementById(`input-${ex}`).value = savedWeight;
-            }
+    // Sayfa açıldığında yükle
+    window.onload = function() {
+        const idler = ['inc-db'];
+        idler.forEach(id => {
+            const val = localStorage.getItem(id);
+            if(val) document.getElementById('prev-'+id).innerText = val + ' kg';
         });
-    });
+    };
 
-    // Ağırlığı kaydet ve butona görsel efekt ver
-    function saveWeight(exerciseId, btnElement) {
-        const inputVal = document.getElementById(`input-${exerciseId}`).value;
-        
-        if (inputVal === "" || inputVal < 0) return;
-
-        // Local Storage'a yaz
-        localStorage.setItem(`workout_${exerciseId}`, inputVal);
-        
-        // Geçmiş kilosunu hemen güncelle
-        document.getElementById(`prev-${exerciseId}`).innerText = `${inputVal} kg`;
-
-        // Buton efekti (Kaydedildi)
-        const originalText = btnElement.innerText;
-        btnElement.innerText = "✓";
-        btnElement.classList.add("saved");
-
-        setTimeout(() => {
-            btnElement.innerText = originalText;
-            btnElement.classList.remove("saved");
-        }, 1500);
+    function kaydet(id) {
+        const val = document.getElementById('input-'+id).value;
+        localStorage.setItem(id, val);
+        document.getElementById('prev-'+id).innerText = val + ' kg';
+        alert('Kaydedildi: ' + val + ' kg');
     }
 </script>
 
